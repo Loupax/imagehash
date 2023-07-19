@@ -1,4 +1,4 @@
-module imagehash
+module github.com/Loupax/imagehash
 
 go 1.18
 
