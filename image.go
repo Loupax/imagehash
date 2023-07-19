@@ -1,17 +1,14 @@
 package imagehash
 
 import (
+	"github.com/disintegration/imaging"
 	"image"
-
-	"golang.org/x/image/draw"
 )
 
 func grayscale(img image.Image) ([][]float64, error) {
-
 	bounds := img.Bounds()
-	imgScale := int(floorp2(min(bounds.Max.X, bounds.Max.Y)))
-	resized := image.NewRGBA(image.Rect(0, 0, imgScale, imgScale))
-	draw.ApproxBiLinear.Scale(resized, resized.Rect, img, bounds, draw.Over, nil)
+	imgScale := int(floorp2(min(bounds.Dx(), bounds.Dy())))
+	resized := imaging.Resize(img, imgScale, imgScale, imaging.Cosine)
 
 	data := make([][]float64, imgScale)
 	for y := 0; y < imgScale; y++ {
