@@ -64,8 +64,8 @@ func (i *Imagehash) Whash(image image.Image, hashsize uint) error {
 	data[0][0] = 0.0
 	IDWT2d(data, level)
 	DWT2d(data, level-hashlevel)
-	excerpt := getexcerpt(data, hashsize)
-	med := median(excerpt)
+	excerpt := extractSquareRegion(data, hashsize)
+	med := median(flatten(excerpt))
 	i.pack(excerpt, med, hashsize)
 	return nil
 }

@@ -8,7 +8,7 @@ import (
 func grayscale(img image.Image) ([][]float64, error) {
 	bounds := img.Bounds()
 	imgScale := int(floorp2(min(bounds.Dx(), bounds.Dy())))
-	resized := imaging.Resize(img, imgScale, imgScale, imaging.Cosine)
+	resized := imaging.Resize(img, imgScale, imgScale, imaging.Lanczos)
 
 	data := make([][]float64, imgScale)
 	for y := 0; y < imgScale; y++ {
