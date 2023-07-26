@@ -243,32 +243,32 @@ func Test_flatten(t *testing.T) {
 func Test_median(t *testing.T) {
 	tests := []struct {
 		name string
-		val  [][]float64
+		val  []float64
 		want float64
 	}{
 		{
 			name: "leftmost square even",
-			val: [][]float64{
-				{8., 2., 3., 4.},
-				{5., 6., 7., 1.},
-				{9., 10., 11., 12.},
-				{13., 14., 15., 16.}},
+			val: []float64{
+				8., 2., 3., 4., 5., 6., 7., 1., 9., 10., 11., 12., 13., 14., 15., 16.,
+			},
 			want: 8.5,
 		},
 		{
 			name: "leftmost square odd",
-			val: [][]float64{
-				{5., 2., 3.},
-				{4., 1., 6.},
-				{7., 8., 9.}},
+			val: []float64{
+				5., 2., 3.,
+				4., 1., 6.,
+				7., 8., 9.,
+			},
 			want: 5.0,
 		},
 		{
 			name: "rightmost jagged odd",
-			val: [][]float64{
-				{1., 2., 3., 4.},
-				{9.},
-				{6., 7., 8., 5.}},
+			val: []float64{
+				1., 2., 3., 4.,
+				9.,
+				6., 7., 8., 5.,
+			},
 			want: 5.,
 		},
 	}

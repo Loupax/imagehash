@@ -123,7 +123,7 @@ func median(data []float64) float64 {
 	copy(temp, data)
 	sort.Float64s(temp)
 	if len(temp)%2 == 1 {
-		return data[len(temp)/2]
+		return temp[len(temp)/2]
 	} else {
 		return 0.5 * (temp[len(temp)/2-1] + temp[len(temp)/2])
 	}

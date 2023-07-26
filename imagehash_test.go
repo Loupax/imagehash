@@ -2,6 +2,7 @@ package imagehash
 
 import (
 	"image"
+	"image/jpeg"
 	"image/png"
 	"os"
 	"testing"
@@ -80,7 +81,7 @@ func TestImagehash_Whash(t *testing.T) {
 	}{
 		{
 			name:     "lenna.png_16×16 bits",
-			file:     "lenna.png",
+			file:     "testdata/lenna.png",
 			level:    16,
 			distance: 0,
 			whash:    "cfbccfbc43f847e947fb5e7348e341e7414741c741cf40cf40ca40fe40f441f0",
@@ -88,7 +89,7 @@ func TestImagehash_Whash(t *testing.T) {
 		},
 		{
 			name:     "lenna.png_8×8 bits",
-			file:     "lenna.png",
+			file:     "testdata/lenna.png",
 			level:    8,
 			distance: 0,
 			whash:    "be98bd890b0b8f8c",
@@ -96,7 +97,7 @@ func TestImagehash_Whash(t *testing.T) {
 		},
 		{
 			name:     "gopher.png_16×16 bits",
-			file:     "gopher.png",
+			file:     "testdata/gopher.png",
 			level:    16,
 			distance: 0,
 			whash:    "01800fa01ff03cf03ff83ffc1ffc1ffc0ffc07fc07fc07fc07fe07f003800200",
@@ -104,7 +105,7 @@ func TestImagehash_Whash(t *testing.T) {
 		},
 		{
 			name:     "gopher.png_8×8 bits",
-			file:     "gopher.png",
+			file:     "testdata/gopher.png",
 			level:    8,
 			distance: 0,
 			whash:    "187c7e3e3e3e1c10",
@@ -112,7 +113,7 @@ func TestImagehash_Whash(t *testing.T) {
 		},
 		{
 			name:     "gopher.png_512*512 bits",
-			file:     "gopher.png",
+			file:     "testdata/gopher.png",
 			level:    512,
 			distance: 0,
 			whash:    "",
@@ -191,5 +192,62 @@ func TestImagehash_Distance(t *testing.T) {
 			}
 			assert.Equal(t, tt.want, got)
 		})
+	}
+}
+
+func BenchmarkImagehash_Whash(b *testing.B) {
+	i := Imagehash{}
+	var img image.Image
+	file, err := os.Open("testdata/lenna.png")
+	assert.NoError(b, err)
+	img, err = png.Decode(file)
+	assert.NoError(b, err)
+	file.Close()
+
+	// Exclude the loading of the image from the test
+	b.ResetTimer()
+	// run the Fib function b.N times
+	for n := 0; n < b.N; n++ {
+		if hashErr := i.Whash(img, 8); hashErr != nil {
+			b.Fatalf("Failed hashing %v", hashErr)
+		}
+	}
+}
+
+func BenchmarkImagehash_Whash6000x2000(b *testing.B) {
+	i := Imagehash{}
+	var img image.Image
+	file, err := os.Open("testdata/6000x2000.jpg")
+	assert.NoError(b, err)
+	img, err = jpeg.Decode(file)
+	assert.NoError(b, err)
+	file.Close()
+
+	// Exclude the loading of the image from the test
+	b.ResetTimer()
+	// run the Fib function b.N times
+	for n := 0; n < b.N; n++ {
+		if hashErr := i.Whash(img, 8); hashErr != nil {
+			b.Fatalf("Failed hashing %v", hashErr)
+		}
+	}
+}
+
+func BenchmarkImagehash_Whash20MB(b *testing.B) {
+	i := Imagehash{}
+	var img image.Image
+	file, err := os.Open("20MB.jpg")
+	assert.NoError(b, err)
+	img, err = jpeg.Decode(file)
+	assert.NoError(b, err)
+	file.Close()
+
+	// Exclude the loading of the image from the test
+	b.ResetTimer()
+	// run the Fib function b.N times
+	for n := 0; n < b.N; n++ {
+		if hashErr := i.Whash(img, 8); hashErr != nil {
+			b.Fatalf("Failed hashing %v", hashErr)
+		}
 	}
 }
